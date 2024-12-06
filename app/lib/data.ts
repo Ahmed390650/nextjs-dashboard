@@ -2,6 +2,7 @@ import { sql } from "@vercel/postgres";
 import {
   CustomerField,
   CustomersTableType,
+  FormattedCustomersTable,
   InvoiceForm,
   InvoicesTable,
   LatestInvoiceRaw,
@@ -166,6 +167,18 @@ export async function fetchInvoiceById(id: string) {
   }
 }
 
+export async function fetchCustomersPage({ query }: { query: string }) {
+  try {
+    const count = await sql`SELECT COUNT(*)
+    FROM customers
+    `;
+    console.log(count);
+    return Math.ceil(Number(count.rows[0].count) / ITEMS_PER_PAGE);
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch total number of invoices.");
+  }
+}
 export async function fetchCustomers() {
   try {
     const data = await sql<CustomerField>`
@@ -184,7 +197,10 @@ export async function fetchCustomers() {
   }
 }
 
-export async function fetchFilteredCustomers(query: string) {
+export async function fetchFilteredCustomers(
+  query: string,
+  currentPage: number
+) {
   try {
     const data = await sql<CustomersTableType>`
 		SELECT

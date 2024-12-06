@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { signIn } from "@/auth";
 import { AuthError } from "next-auth";
+
 export type State = {
   errors?: {
     customerId?: string[];
@@ -33,7 +34,6 @@ export async function createInvoice(prevState: State, formData: FormData) {
   const validatedFields = CreateInvoice.safeParse(Object.entries(formData));
 
   // If form validation fails, return errors early. Otherwise, continue.
-  console.log(validatedFields);
   if (!validatedFields.success) {
     return {
       errors: validatedFields.error.flatten().fieldErrors,
@@ -55,7 +55,7 @@ export async function createInvoice(prevState: State, formData: FormData) {
   } catch (error) {
     // If a database error occurs, return a more specific error.
     return {
-      message: "Database Error: Failed to Create Invoice.",
+      message: "Database Error: Failed to Create Invoice." + error,
     };
   }
 
@@ -93,7 +93,7 @@ export async function updateInvoice(
       WHERE id = ${id}
     `;
   } catch (error) {
-    return { message: "Database Error: Failed to Update Invoice." };
+    return { message: "Database Error: Failed to Update Invoice.", error };
   }
 
   revalidatePath("/dashboard/invoices");
@@ -105,7 +105,7 @@ export async function deleteInvoice(id: string) {
     revalidatePath("/dashboard/invoices");
     return { message: "Deleted Invoice." };
   } catch (error) {
-    return { message: "Database Error: Failed to Delete Invoice." };
+    return { message: "Database Error: Failed to Delete Invoice.", error };
   }
 }
 export async function authenticate(
@@ -126,3 +126,4 @@ export async function authenticate(
     throw error;
   }
 }
+// export async function createCustomer(prevState: State, formData: formData) {}
