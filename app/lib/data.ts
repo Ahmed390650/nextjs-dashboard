@@ -2,7 +2,6 @@ import { sql } from "@vercel/postgres";
 import {
   CustomerField,
   CustomersTableType,
-  FormattedCustomersTable,
   InvoiceForm,
   InvoicesTable,
   LatestInvoiceRaw,
@@ -167,7 +166,7 @@ export async function fetchInvoiceById(id: string) {
   }
 }
 
-export async function fetchCustomersPage({ query }: { query: string }) {
+export async function fetchCustomersPage() {
   try {
     const count = await sql`SELECT COUNT(*)
     FROM customers
@@ -197,10 +196,7 @@ export async function fetchCustomers() {
   }
 }
 
-export async function fetchFilteredCustomers(
-  query: string,
-  currentPage: number
-) {
+export async function fetchFilteredCustomers(query: string) {
   try {
     const data = await sql<CustomersTableType>`
 		SELECT

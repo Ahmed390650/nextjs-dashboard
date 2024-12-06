@@ -18,7 +18,7 @@ const page = async ({
 }) => {
   const { query = "", page } = await searchParams;
   const currentPage = Number(page) || 1;
-  const totalPages = await fetchCustomersPage({ query });
+  const totalPages = await fetchCustomersPage();
   return (
     <main className="w-full ">
       <div className="flex w-full items-center justify-between">

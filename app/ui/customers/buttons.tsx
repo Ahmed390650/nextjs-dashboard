@@ -2,10 +2,6 @@ import { PlusIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import React from "react";
 
-const buttons = () => {
-  return <div></div>;
-};
-
 const CreateCustomer = () => {
   return (
     <Link
